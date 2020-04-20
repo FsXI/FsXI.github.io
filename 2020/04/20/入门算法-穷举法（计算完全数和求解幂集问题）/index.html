@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>入门算法-穷举法（计算完全数和求解幂集问题） - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.18.1/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_ijqayz9ro8k.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Hexo</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2020-04-20 17:02">
+                    Monday, April 20th 2020, 5:02 pm
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.1k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    13
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>  <em>写在前面，关于穷举法的定义自行去Google，在我的理解就是暴力求解，把所有可能都推算出来，这对于自己没有其他策略和解题思路的情况下，可以使用穷举法，但是其弊端也是很明显的，相对于其他算法思想来说时间复杂度是极高的，所以慎用。</em></p>
+<h2 id="一、使用技术"><a href="#一、使用技术" class="headerlink" title="一、使用技术"></a>一、使用技术</h2><p>蛮力法所赖的基本技术——扫描技术<br>基本的扫描技术——遍历<br>（1）集合的遍历：按集合中元素序号的顺序处理各元素<br>（2）线性表的遍历：以数组形式存储，按下标顺序处理<br>（3）树的遍历：对二叉树，包括前序、中序、后序和层序<br>（4）图的遍历：深度优先、广度优先</p>
+<h2 id="二、适用范围"><a href="#二、适用范围" class="headerlink" title="二、适用范围"></a>二、适用范围</h2><p>（1）理论上，蛮力法可以解决可计算领域的各种问题。<br>   （2）蛮力法经常用来解决一些较小规模的问题。<br>   （3）对于某些问题,蛮力法可以产生一些合理的算法，他们具备一定实用价值，而且不受问题规模的限制。<br>   （4）蛮力法可以作为某类问题时间性能的底限，作为衡量同样问题效率的基础算法。 </p>
+<h2 id="三、求解过程"><a href="#三、求解过程" class="headerlink" title="三、求解过程"></a>三、求解过程</h2><p>根据问题中的条件将可能的情况一一列举出来，逐一尝试从中找出满足问题条件的解。但有时列举的情况数目很大，则需要排除一些明显不合理的情况，以减少问题可能解规模。<br>用蛮力法解决问题，通常从两个方面进行算法设计：<br>1）找出枚举范围：分析问题所涉及的各种情况。<br>2）找出约束条件：分析问题的解需要满足的条件，并用逻辑表达式表示。</p>
+<h2 id="四、基本格式"><a href="#四、基本格式" class="headerlink" title="四、基本格式"></a>四、基本格式</h2><p><img src="https://img-blog.csdnimg.cn/20191004151237832.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MjYzNDI2MA==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="五、例题"><a href="#五、例题" class="headerlink" title="五、例题"></a>五、例题</h2><p>1、编写一个程序，输出2～1000之间的所有完全数。所谓完全数，是指这样的数，该数的各因子（除该数本身外）之和正好等于该数本身，例如：<br>　　6=1+2+3<br>　　28=1+2+4+7+14<br>解：先考虑对于一个整数m，如何判断它是否为完全数。从数学知识可知：一个数m的除该数本身外的所有因子都在1～m/2之间。算法中要取得因子之和，只要在1～m/2之间找到所有整除m的数，将其累加起来即可。如果累加和与m本身相等，则表示m是一个完全数，可以将m 输出。</p>
+<pre><code class="hljs cpp"><span class="hljs-comment">//  main.cpp</span>
+<span class="hljs-comment">//  dome4</span>
+<span class="hljs-comment">//</span>
+<span class="hljs-comment">//  Created by ExiFeng on 2019/9/26.</span>
+<span class="hljs-comment">//  Copyright © 2019 ExiFeng. All rights reserved.</span>
+<span class="hljs-comment">//</span>
+
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;
+方法<span class="hljs-number">1</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
+<span class="hljs-function"></span>&#123;
+    <span class="hljs-keyword">int</span> i,j,n;
+    <span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">"2-1000内的所有完数有："</span>;
+    <span class="hljs-keyword">for</span>(i=<span class="hljs-number">2</span>; i&lt;=<span class="hljs-number">1000</span>; i++)
+    &#123;
+        n=<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">for</span>(j=<span class="hljs-number">2</span>; j&lt;<span class="hljs-built_in">sqrt</span>(i); j++)
+            <span class="hljs-keyword">if</span>(i%j==<span class="hljs-number">0</span>)
+                n+=(j+i/j);
+        <span class="hljs-keyword">if</span>(i==n)
+            <span class="hljs-built_in">cout</span>&lt;&lt;i&lt;&lt;<span class="hljs-string">" "</span>;
+    &#125;
+    <span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-built_in">endl</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+<span class="hljs-comment">//方法2</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;
+    <span class="hljs-keyword">int</span> i,j,n;
+    <span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-string">"2-1000内的所有完数有："</span>;
+    <span class="hljs-keyword">for</span>(i=<span class="hljs-number">2</span>; i&lt;=<span class="hljs-number">1000</span>; i++)
+    &#123;
+        n=<span class="hljs-number">1</span>;
+        <span class="hljs-keyword">for</span>(j=<span class="hljs-number">2</span>; j&lt;=i/<span class="hljs-number">2</span>; j++)
+            <span class="hljs-keyword">if</span>(i%j==<span class="hljs-number">0</span>)
+                n+=j;
+        <span class="hljs-keyword">if</span>(i==n)
+            <span class="hljs-built_in">cout</span>&lt;&lt;i&lt;&lt;<span class="hljs-string">" "</span>;
+    &#125;
+    <span class="hljs-built_in">cout</span>&lt;&lt;<span class="hljs-built_in">endl</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;</code></pre>
+
+<p>2、问题描述：对于给定的正整数n（n≥1），求1～n构成的集合的所有子集（幂集）。<br>幂集（Power  Set）：原集合中所有的子集（包括全集和空集）构成的集族<br>n为3时，集合为：{1, 2, 3}<br>所有的子集为：{}, {1}, {2}, {3}, {1,2}, {1,3}, {2,3}, {1,2,3}<br>总次数=2的n次方</p>
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">first</span><span class="hljs-params">(<span class="hljs-keyword">int</span> b[],<span class="hljs-keyword">int</span> n)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;
+    <span class="hljs-keyword">int</span> n = <span class="hljs-number">3</span>;
+    <span class="hljs-keyword">int</span> a[<span class="hljs-number">3</span>] = &#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;;
+    <span class="hljs-keyword">int</span> b[<span class="hljs-number">3</span>] = &#123;<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>&#125;;
+    <span class="hljs-keyword">int</span> i, k;
+    <span class="hljs-keyword">int</span> pw = <span class="hljs-built_in">pow</span>(<span class="hljs-number">2</span>, n);
+    <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"1—"</span> &lt;&lt; n &lt;&lt; <span class="hljs-string">"的幂集"</span> &lt;&lt; <span class="hljs-built_in">endl</span>;
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; pw; i++) &#123;              
+<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"&#123;"</span>;
+        <span class="hljs-keyword">for</span> (k = <span class="hljs-number">0</span>; k &lt; n; k++)
+            <span class="hljs-keyword">if</span> (b[k])
+                <span class="hljs-built_in">cout</span> &lt;&lt; a[k];
+        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">"&#125;"</span>;
+        first(b, n);
+    
+&#125;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">first</span><span class="hljs-params">(<span class="hljs-keyword">int</span> b[],<span class="hljs-keyword">int</span> n)</span></span>&#123;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) &#123;
+        <span class="hljs-keyword">if</span>(b[i])
+            b[i] = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span>&#123;
+            b[i] = <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">break</span>;
+        &#125;
+    &#125;
+&#125;</code></pre>
+<p>当然，求解幂问题还可以使用回溯法和动态规划法，在这里我仅此列举穷举法，有兴趣的同学们可以自行google。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/20/%E5%85%A5%E9%97%A8%E7%AE%97%E6%B3%95-%E7%AE%97%E6%B3%95%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88%E8%AE%A1%E7%AE%97%E4%B9%A6%E7%9A%84%E9%A1%B5%E7%A0%81%EF%BC%89/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">入门算法-算法的时间复杂性分析（计算书的页码）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/20/SpringBoot%E9%9B%86%E6%88%90Mybatis2%EF%BC%88%E9%99%84%E5%B8%A6%E6%95%B4%E5%90%88Junit%E5%92%8Clombok%EF%BC%89/">
+                        <span class="hidden-mobile">SpringBoot集成Mybatis2（附带整合Junit和lombok）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "入门算法-穷举法（计算完全数和求解幂集问题）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
