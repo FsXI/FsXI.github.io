@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <title>SpringBoot集成Mybatis2（附带整合Junit和lombok） - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+<link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/9.18.1/styles/github-gist.min.css" />
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_fmb4a04yx8h.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_ijqayz9ro8k.css">
+
+
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Hexo</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="iconfont icon-home-fill"></i>
+              Home</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">
+              <i class="iconfont icon-archive-fill"></i>
+              Archives</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">
+              <i class="iconfont icon-category-fill"></i>
+              Categories</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/tags/">
+              <i class="iconfont icon-tags-fill"></i>
+              Tags</a>
+          </li>
+        
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">
+              <i class="iconfont icon-user-fill"></i>
+              About</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+                <div class="mt-3 post-meta">
+                  <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+                  <time datetime="2020-04-20 16:59">
+                    Monday, April 20th 2020, 4:59 pm
+                  </time>
+                </div>
+              
+
+              <div class="mt-1">
+                
+                  
+                  <span class="post-meta mr-2">
+                    <i class="iconfont icon-chart"></i>
+                    1.2k 字
+                  </span>
+                
+
+                
+                  
+                  <span class="post-meta mr-2">
+                      <i class="iconfont icon-clock-fill"></i>
+                    
+                    
+                    17
+                     分钟
+                  </span>
+                
+
+                
+              </div>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>掘金地址：<a href="https://juejin.im/post/5d37faf16fb9a07f03577c97" target="_blank" rel="noopener">https://juejin.im/post/5d37faf16fb9a07f03577c97</a></p>
+<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>自己现在也是在初学springboot，在之前开发时用过ssm架构，觉得步骤有点繁琐，进而了解到springboot。</p>
+<p>SpringBoot对上述Spring的缺点进行的改善和优化，基于约定优于配置的思想，可以让开发人员不必在配置与逻辑业务之间进行思维的切换，全身心的投入到逻辑业务的代码编写中，从而大大提高了开发的效率，一定程度上缩短了项目周期。</p>
+<h3 id="springboot的特点："><a href="#springboot的特点：" class="headerlink" title="springboot的特点："></a>springboot的特点：</h3><ul>
+<li><p>起步依赖</p>
+<p>起步依赖本质上是一个Maven项目对象模型（Project Object Model，POM），定义了对其他库的传递依赖，这些东西加在一起即支持某项功能。</p>
+<p>简单的说，起步依赖就是将具备某种功能的坐标打包到一起，并提供一些默认的功能。</p>
+</li>
+<li><p>自动配置</p>
+<p>Spring Boot的自动配置是一个运行时（更准确地说，是应用程序启动时）的过程，考虑了众多因素，才决定Spring配置应该用哪个，不该用哪个。该过程是Spring自动完成的。</p>
+</li>
+</ul>
+<h2 id="第一步：新建一个springboot-maven工程"><a href="#第一步：新建一个springboot-maven工程" class="headerlink" title="第一步：新建一个springboot maven工程"></a>第一步：新建一个springboot maven工程</h2><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS83LzI0LzE2YzIyYjA5OGQ5ZmQzYTM" srcset="/img/loading.gif" alt=""></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS83LzI0LzE2YzIyYjE1YWI5ZjM0YTc" srcset="/img/loading.gif" alt=""><br>勾选一下 web starter</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS83LzI0LzE2YzIyYjFjMjIwMDQzZTE" srcset="/img/loading.gif" alt=""></p>
+<h2 id="第二步：添加Mybatis依赖和数据库驱动信息"><a href="#第二步：添加Mybatis依赖和数据库驱动信息" class="headerlink" title="第二步：添加Mybatis依赖和数据库驱动信息"></a>第二步：添加Mybatis依赖和数据库驱动信息</h2><pre><code class="hljs plain">&lt;!--mybatis起步依赖--&gt;
+       &lt;dependency&gt;
+           &lt;groupId&gt;org.mybatis.spring.boot&lt;&#x2F;groupId&gt;
+           &lt;artifactId&gt;mybatis-spring-boot-starter&lt;&#x2F;artifactId&gt;
+           &lt;version&gt;1.1.1&lt;&#x2F;version&gt;
+       &lt;&#x2F;dependency&gt;
+
+       &lt;!-- MySQL连接驱动 --&gt;
+       &lt;dependency&gt;
+           &lt;groupId&gt;mysql&lt;&#x2F;groupId&gt;
+           &lt;artifactId&gt;mysql-connector-java&lt;&#x2F;artifactId&gt;
+       &lt;&#x2F;dependency&gt;</code></pre>
+
+
+
+<h2 id="第三步：在application-properties中添加数据量的连接信息和创建简单的user表"><a href="#第三步：在application-properties中添加数据量的连接信息和创建简单的user表" class="headerlink" title="第三步：在application.properties中添加数据量的连接信息和创建简单的user表"></a>第三步：在application.properties中添加数据量的连接信息和创建简单的user表</h2><pre><code class="hljs plain">#DB Configuration:
+spring.datasource.driverClassName&#x3D;com.mysql.jdbc.Driver spring.datasource.url&#x3D;jdbc:mysql:&#x2F;&#x2F;127.0.0.1:3306&#x2F;test? useUnicode&#x3D;true&amp;characterEncoding&#x3D;utf8 
+spring.datasource.username&#x3D;root 
+spring.datasource.password&#x3D;root</code></pre>
+
+
+<pre><code class="hljs plain">-- ---------------------------- -- Table structure for &#96;user&#96; -- ---------------------------- DROP TABLE IF EXISTS &#96;user&#96;; CREATE TABLE &#96;user&#96; (
+&#96;id&#96; int(11) NOT NULL AUTO_INCREMENT,
+&#96;username&#96; varchar(50) DEFAULT NULL, 
+&#96;password&#96; varchar(50) DEFAULT NULL, 
+&#96;name&#96; varchar(50) DEFAULT NULL, 
+PRIMARY KEY (&#96;id&#96;)
+) ENGINE&#x3D;InnoDB AUTO_INCREMENT&#x3D;10 DEFAULT CHARSET&#x3D;utf8;
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+INSERT INTO &#96;user&#96; VALUES (&#39;1&#39;, &#39;zhangsan&#39;, &#39;123&#39;, &#39;张三&#39;); INSERT INTO &#96;user&#96; VALUES (&#39;2&#39;, &#39;lisi&#39;, &#39;123&#39;, &#39;李四&#39;);</code></pre>
+
+<h2 id="第四步：创建实体Bean（在这里推荐使用lombok插件，减少代码量）"><a href="#第四步：创建实体Bean（在这里推荐使用lombok插件，减少代码量）" class="headerlink" title="第四步：创建实体Bean（在这里推荐使用lombok插件，减少代码量）"></a>第四步：创建实体Bean（在这里推荐使用lombok插件，减少代码量）</h2><p>lombok的学习看我上一篇文章：<a href="https://blog.csdn.net/weixin_42634260/article/details/97021227" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42634260/article/details/97021227</a></p>
+<pre><code class="hljs plain">&lt;!--lombok--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.projectlombok&lt;&#x2F;groupId&gt;
+            &lt;artifactId&gt;lombok&lt;&#x2F;artifactId&gt;
+            &lt;version&gt;1.16.6&lt;&#x2F;version&gt;
+        &lt;&#x2F;dependency&gt;</code></pre>
+
+<pre><code class="hljs plain">@Data
+public class user &#123;
+
+    private Integer id;
+    private String username;
+    private String password;
+    private String name;
+&#125;</code></pre>
+
+
+<h2 id="第五步：编写Mapper"><a href="#第五步：编写Mapper" class="headerlink" title="第五步：编写Mapper"></a>第五步：编写Mapper</h2><pre><code class="hljs plain">@Mapper
+public interface UserMapper &#123;
+    public List&lt;User&gt; queryUserList();
+&#125;</code></pre>
+<p>注意:@Mapper标记该类是一个mybatis的mapper接口，可以被spring boot自动扫描到spring上下文中</p>
+<h2 id="第六步：配置Mapper映射文件"><a href="#第六步：配置Mapper映射文件" class="headerlink" title="第六步：配置Mapper映射文件"></a>第六步：配置Mapper映射文件</h2><p>在src\main\resources\mapper路径下加入UserMapper.xml配置文件</p>
+<pre><code class="hljs plain">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot; ?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-&#x2F;&#x2F;mybatis.org&#x2F;&#x2F;DTD Mapper 3.0&#x2F;&#x2F;EN&quot; &quot;http:&#x2F;&#x2F;mybatis.org&#x2F;dtd&#x2F;mybatis-3-mapper.dtd&quot; &gt;
+&lt;mapper namespace&#x3D;&quot;com.itheima.mapper.UserMapper&quot;&gt;
+&lt;select id&#x3D;&quot;queryUserList&quot; resultType&#x3D;&quot;user&quot;&gt; 
+select * from user
+&lt;&#x2F;select&gt; 
+&lt;&#x2F;mapper&gt;</code></pre>
+
+
+<h2 id="第七步：在application-properties中添加mybatis的信息"><a href="#第七步：在application-properties中添加mybatis的信息" class="headerlink" title="第七步：在application.properties中添加mybatis的信息"></a>第七步：在application.properties中添加mybatis的信息</h2><pre><code class="hljs plain">#spring集成Mybatis环境
+#pojo别名扫描包 
+mybatis.type-aliases-package&#x3D;com.itheima.domain 
+#加载Mybatis映射文件 
+mybatis.mapper-locations&#x3D;classpath:mapper&#x2F;*Mapper.xml</code></pre>
+
+
+<h2 id="第八步：编写controller测试类"><a href="#第八步：编写controller测试类" class="headerlink" title="第八步：编写controller测试类"></a>第八步：编写controller测试类</h2><pre><code class="hljs plain">@Controller
+public class MapperController &#123;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @RequestMapping(&quot;&#x2F;queryUser&quot;)
+    @ResponseBody
+    public List&lt;User&gt; queryUser()&#123;
+        List&lt;User&gt; users &#x3D; userMapper.queryUserList();
+
+        return users;
+    &#125;
+
+&#125;</code></pre>
+
+
+<h3 id="最后一步：测试，运行代码（注意idea在创建项目时它本身已经帮我们创建了一个SpringBoot引导类）"><a href="#最后一步：测试，运行代码（注意idea在创建项目时它本身已经帮我们创建了一个SpringBoot引导类）" class="headerlink" title="最后一步：测试，运行代码（注意idea在创建项目时它本身已经帮我们创建了一个SpringBoot引导类）"></a>最后一步：测试，运行代码（注意idea在创建项目时它本身已经帮我们创建了一个SpringBoot引导类）</h3><pre><code class="hljs plain">@SpringBootApplication
+
+public class SpringbootMybatisApplication &#123;
+
+    public static void main(String[] args) &#123;
+
+        SpringApplication.run(SpringbootMybatisApplication.class, args);
+    &#125;
+
+&#125;</code></pre>
+
+
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS83LzI0LzE2YzIyYmRiODljMWNjMTc" srcset="/img/loading.gif" alt=""></p>
+<h2 id="随便唠叨一下，springboot继承Junit也是非常简单的"><a href="#随便唠叨一下，springboot继承Junit也是非常简单的" class="headerlink" title="随便唠叨一下，springboot继承Junit也是非常简单的"></a>随便唠叨一下，springboot继承Junit也是非常简单的</h2><h3 id="首先还是添加一下Junit的依赖"><a href="#首先还是添加一下Junit的依赖" class="headerlink" title="首先还是添加一下Junit的依赖"></a>首先还是添加一下Junit的依赖</h3><pre><code class="hljs plain">&lt;!--测试的起步依赖--&gt; 
+&lt;dependency&gt;
+&lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;
+&lt;artifactId&gt;spring-boot-starter-test&lt;&#x2F;artifactId&gt;
+&lt;scope&gt;test&lt;&#x2F;scope&gt;
+&lt;&#x2F;dependency&gt;</code></pre>
+
+<h3 id="编写测试类，目录结构如下"><a href="#编写测试类，目录结构如下" class="headerlink" title="编写测试类，目录结构如下"></a>编写测试类，目录结构如下</h3><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS83LzI0LzE2YzIyYzBkYzNjZTU0YTA" srcset="/img/loading.gif" alt=""></p>
+<pre><code class="hljs plain">@RunWith(SpringRunner.class)
+@SpringBootTest(classes &#x3D; SpringbootMybatisApplication.class)
+
+public class MybatisTest &#123;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Test
+    public void test()&#123;
+        List&lt;User&gt; users &#x3D; userMapper.queryUserList();
+        System.out.println(users);
+
+
+    &#125;
+&#125;</code></pre>
+
+<p>其中， SpringRunner继承自SpringJUnit4ClassRunner，使用哪一个Spring提供的测试测试引擎都可以</p>
+<pre><code class="hljs plain">public final class SpringRunner extends SpringJUnit4ClassRunner</code></pre>
+
+<p>@SpringBootTest的属性指定的是引导类的字节码对象。</p>
+<h2 id="run一下，在控制台打印信息"><a href="#run一下，在控制台打印信息" class="headerlink" title="run一下，在控制台打印信息"></a>run一下，在控制台打印信息</h2><p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91c2VyLWdvbGQtY2RuLnhpdHUuaW8vMjAxOS83LzI0LzE2YzIyYzM3M2E4ZmM0ODQ" srcset="/img/loading.gif" alt=""></p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>在学习springboot的过程中，要有一种深挖源码的习惯，springboot在开发中给予了我们极大的便利，但是自己要能清晰的明白每个步骤底层的原理是怎样实现的。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC" target="_blank" rel="nofollow noopener noopener">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/20/%E5%85%A5%E9%97%A8%E7%AE%97%E6%B3%95-%E7%A9%B7%E4%B8%BE%E6%B3%95%EF%BC%88%E8%AE%A1%E7%AE%97%E5%AE%8C%E5%85%A8%E6%95%B0%E5%92%8C%E6%B1%82%E8%A7%A3%E5%B9%82%E9%9B%86%E9%97%AE%E9%A2%98%EF%BC%89/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">入门算法-穷举法（计算完全数和求解幂集问题）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/04/20/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/">
+                        <span class="hidden-mobile">我的第一篇文章</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/main.js" ></script>
+
+
+  <script  src="/js/lazyload.js" ></script>
+
+
+
+  
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+<!-- Plugins -->
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "SpringBoot集成Mybatis2（附带整合Junit和lombok）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
